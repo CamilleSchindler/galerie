@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Galerie</title>
+</head>
+<body>
+    <h1 class="main-title">Galerie d'images</h1>
+
+    <div class="images">
+        <!-- On met les retours à la ligne entre les images en commentaire pour éviter de créer des pixels (plus d'infos ici : https://www.alsacreations.com/astuce/lire/1432-display-inline-block-espaces-indesirables.html) -->
+        <img id="1" src="images/thumbnails/1-min.jpg" alt=""><!--
+        --><img id="2" src="images/thumbnails/2-min.jpg" alt=""><!--
+        --><img id="3" src="images/thumbnails/3-min.jpg" alt=""><!--
+        --><img id="4" src="images/thumbnails/4-min.jpg" alt=""><!--
+        --><img id="5" src="images/thumbnails/5-min.jpg" alt=""><!--
+        --><img id="6" src="images/thumbnails/6-min.jpg" alt=""><!--
+        --><img id="7" src="images/thumbnails/7-min.jpg" alt=""><!--
+        --><img id="8" src="images/thumbnails/8-min.jpg" alt="">
+    </div>
+
+
+    <script type="text/javascript">
+        // Fonction permettant de créer un overlay (une div semi-transparente qui recouvre toute la page web)
+        function setOverlay(number){
+
+            // Création, paramétrage et insertion dans le DOM de l'overlay
+            let overlay = document.createElement('div');
+            overlay.classList.add('overlay');
+            document.querySelector('body').append(overlay);
+
+            // Mise en place d'un écouteur d'évènement sur l'overlay, permettant de supprimer ce dernier en cliquant dessus
+            overlay.addEventListener('click', function(){
+                // removeOverlay() est la fonction créée plus bas dans le fichier pour supprimer l'overlay
+                removeOverlay();
+            });
+
+            // Création, paramétrage et insertion dans l'overlay de l'image
+            let image = document.createElement('img');
+            // On sait quelle image charger car le paramètre 'number' contient le numéro de la vignette cliquée.
+            image.setAttribute('src', 'images/'+ number +'.jpg');
+            overlay.append(image);
+
+
+            // Mise en place d'un écouteur d'évènement sur l'image pour empêcher la propagation du 'click' à l'overlay (empêcher l'overlay d'être supprimé en cas de clique sur l'image)
+            image.addEventListener('click', function(e){
+                e.stopPropagation();
+            });
+
+
+            // Création, paramétrage et insertion dans l'overlay du bouton de fermeture (croix).
+            let closeButton = document.createElement('div');
+            closeButton.classList.add('close');
+            closeButton.textContent = 'X';
+            overlay.append(closeButton);
+
+            // NOTE : pas besoin de mettre un écouteur d'évènement sur la croix pour supprimer l'overlay, celui ci propagera déjà naturellement le clique à l'overlay qui lui même a déjà un tel écouteur d'évènement.
+
+        }
+
+        // Fonction permettant de supprimer l'overlay (et tout ce qu'il contient)
+        function removeOverlay(){
+            document.querySelector('.overlay').parentElement.removeChild(document.querySelector('.overlay'));
+        }
+
+
+        // Mise en place d'un écouteur d'évènement sur toutes les vignettes dans la div principale de la galerie
+        document.querySelectorAll('.images img').forEach(function(image){
+
+            image.addEventListener('click', function(){
+                // image.id contient le numéro de la vignette cliquée (pour savoir quelle grande image doit être chargée)
+                setOverlay(image.id);
+            });
+        });
+
+
+    </script>
+</body>
+</html>
